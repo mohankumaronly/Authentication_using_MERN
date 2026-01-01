@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require("../models/auth.model");
+const RefreshToken = require("../models/auth.refreshToken");
 
 
 const register = async (req, res) => {
@@ -26,7 +28,7 @@ const register = async (req, res) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
-        const user = User({
+        const user = User.create({
             firstName,
             lastName,
             email,
@@ -75,20 +77,35 @@ const login = async (req, res) => {
                 message: "Invalid credentials"
             });
         }
-        const expiresIn = rememberMe ? "7d" : "1d";
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             { userId: user._id },
             process.env.JWT_SECRET_KEY,
-            { expiresIn }
+            { expiresIn: "15m" }
         );
+        const NewRefreshToken = crypto.randomBytes(40).toString('hex');
+        const hashedRefreshToken = crypto
+            .createHash("sha256")
+            .update(NewRefreshToken)
+            .digest("hex");
+        const refreshTokenExpiry = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+        await RefreshToken.create({
+            userId: user._id,
+            token: hashedRefreshToken,
+            expiresAt: Date.now() + refreshTokenExpiry,
+        })
         const { password: _, ...safeUserData } = user.toObject();
-        const maxAge = rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
         return res
-            .cookie("token", token, {
+            .cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: 'lax',
-                maxAge
+                maxAge: 15 * 60 * 1000,
+            })
+            .cookie("refreshToken", NewRefreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: 'lax',
+                maxAge: refreshTokenExpiry
             })
             .status(200)
             .json({
@@ -105,10 +122,29 @@ const login = async (req, res) => {
     }
 }
 
-const logOut = async (_, res) => {
+const logOut = async (req, res) => {
     try {
+        const refreshToken = req.cookies.refreshToken;
+
+        if (refreshToken) {
+            const hashedToken = crypto
+                .createHash("sha256")
+                .update(refreshToken)
+                .digest("hex");
+
+            await RefreshToken.findOneAndUpdate(
+                { token: hashedToken },
+                { revoked: true }
+            );
+        }
+
         return res
-            .clearCookie("token", {
+            .clearCookie("accessToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: 'lax',
+            })
+            .clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: 'lax',
