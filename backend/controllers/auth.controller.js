@@ -6,6 +6,11 @@ const RefreshToken = require("../models/auth.refreshToken");
 const sendEmail = require('../utils/sendEmail');
 const verifyEmailTemplate = require("../utils/Emails/emailVerificationTemplate");
 
+const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+};
 
 const register = async (req, res) => {
     try {
@@ -21,7 +26,7 @@ const register = async (req, res) => {
                 message: "All fields are required",
             });
         }
-        const existingUser = await User.findOne({ email :email.toLowerCase() });
+        const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
@@ -99,36 +104,41 @@ const login = async (req, res) => {
                 message: "Please verify your email before logging in",
             });
         }
+
+        const accessTokenExpiry = rememberMe ? "7d" : "15m";
+        const accessTokenMaxAge = rememberMe
+            ? 7 * 24 * 60 * 60 * 1000
+            : 15 * 60 * 1000;
+
+        const refreshTokenExpiry = rememberMe ?
+            30 * 24 * 60 * 60 * 1000 :
+            7 * 24 * 60 * 60 * 1000;
+
         const accessToken = jwt.sign(
             { userId: user._id },
             process.env.JWT_SECRET_KEY,
-            { expiresIn: "15m" }
+            { expiresIn: accessTokenExpiry }
         );
         const NewRefreshToken = crypto.randomBytes(40).toString('hex');
         const hashedRefreshToken = crypto
             .createHash("sha256")
             .update(NewRefreshToken)
             .digest("hex");
-        const refreshTokenExpiry = rememberMe ?
-            30 * 24 * 60 * 60 * 1000 :
-            7 * 24 * 60 * 60 * 1000;
         await RefreshToken.create({
             userId: user._id,
             token: hashedRefreshToken,
             expiresAt: Date.now() + refreshTokenExpiry,
-        })
+        });
+
         const { password: _, ...safeUserData } = user.toObject();
+
         return res
             .cookie("accessToken", accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: 'lax',
-                maxAge: 15 * 60 * 1000,
+                ...cookieOptions,
+                maxAge: accessTokenMaxAge,
             })
             .cookie("refreshToken", NewRefreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: 'lax',
+                ...cookieOptions,
                 maxAge: refreshTokenExpiry
             })
             .status(200)
@@ -163,16 +173,8 @@ const logOut = async (req, res) => {
         }
 
         return res
-            .clearCookie("accessToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: 'lax',
-            })
-            .clearCookie("refreshToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: 'lax',
-            })
+            .clearCookie("accessToken", cookieOptions)
+            .clearCookie("refreshToken", cookieOptions)
             .status(200)
             .json({
                 success: true,

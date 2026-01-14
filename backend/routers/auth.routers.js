@@ -7,6 +7,7 @@ const limiter = require('../middlewares/rate.limiter');
 const refreshTokenController = require('../controllers/auth.refreshToken.controller');
 const protect = require('../middlewares/token.verification');
 const verifyEmail = require('../controllers/verifyEmail.controller');
+const getMe = require('../controllers/auth.me.controller');
 
 const authRouter = express.Router();
 authRouter.post('/register', validate(registerSchema), register);
@@ -16,13 +17,7 @@ authRouter.post('/refresh-token', refreshTokenController);
 authRouter.post('/forgot-password', limiter, validate(forgotPasswordSchema), forgotPassword);
 authRouter.post('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 authRouter.post('/logout', logOut);
-// this router is just for checking
-authRouter.get("/me", protect, (req, res) => {
-    res.json({
-        success: true,
-        user: req.user,
-    });
-});
+authRouter.get('/me', getMe);
 
 
 module.exports = authRouter;
