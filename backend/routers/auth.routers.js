@@ -8,6 +8,7 @@ const refreshTokenController = require('../controllers/auth.refreshToken.control
 const protect = require('../middlewares/token.verification');
 const verifyEmail = require('../controllers/verifyEmail.controller');
 const getMe = require('../controllers/auth.me.controller');
+const { googleAuthCallback, googleAuthStart } = require('../controllers/googleAuthCallback.controller');
 
 const authRouter = express.Router();
 authRouter.post('/register', validate(registerSchema), register);
@@ -18,6 +19,8 @@ authRouter.post('/forgot-password', limiter, validate(forgotPasswordSchema), for
 authRouter.post('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 authRouter.post('/logout', logOut);
 authRouter.get('/me', getMe);
+authRouter.get('/google', googleAuthStart);
+authRouter.get("/google/callback", googleAuthCallback);
 
 
 module.exports = authRouter;

@@ -91,6 +91,13 @@ const login = async (req, res) => {
                 message: "Invalid credentials",
             })
         }
+        if (user.authProvider !== "local") {
+            return res.status(400).json({
+                success: false,
+                message: "This account uses Google sign-in. Please continue with Google.",
+            });
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({
