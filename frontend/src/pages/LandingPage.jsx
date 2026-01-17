@@ -8,7 +8,7 @@ const LandingPage = () => {
   return (
     <>
       <CommonLayout>
-        <Button text="Get start" Onclick={() => {
+        <Button text="Get start" onClick={() => {
           navigate('/auth/register');
         }} />
       </CommonLayout>
