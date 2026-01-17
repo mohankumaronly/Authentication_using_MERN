@@ -4,6 +4,7 @@ import LandingPage from '../pages/LandingPage'
 import RegisterPage from '../pages/RegisterPage'
 import Login from '../pages/Login'
 import ForgotPasswordPage from '../pages/ForgotPasswordPage'
+import ResetPasswordPage from '../pages/ResetPasswordPage'
 
 const AppRouters = () => {
     return (
@@ -12,6 +13,7 @@ const AppRouters = () => {
             <Route path='/auth/register' element={<RegisterPage />} />
             <Route path='/auth/login' element={<Login />} />
             <Route path='/auth/forgot-password' element={<ForgotPasswordPage />} />
+            <Route path='/auth/reset-password' element={< ResetPasswordPage />} />
         </Routes>
     )
 }

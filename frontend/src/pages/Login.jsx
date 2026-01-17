@@ -48,6 +48,9 @@ const Login = () => {
               value={formData.password}
               onChange={onChange}
             />
+            <p className='text-end font-bold hover:underline cursor-pointer'
+              onClick={() => navigate('/auth/forgot-password')}
+            >Forgot password?</p>
             <Button type="submit" text="Login account" fullWidth />
             <p className='text-center'>Don't have account? <span className='font-bold cursor-pointer hover:underline'
               onClick={() => {

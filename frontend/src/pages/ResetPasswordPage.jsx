@@ -2,18 +2,15 @@ import CommonLayout from '../layouts/CommonLayout'
 import useInputText from '../Hooks/InputHooks'
 import InputText from '../common/InputText';
 import Button from '../common/Button';
-import { useNavigate } from 'react-router-dom';
 
-const ForgotPasswordPage = () => {
-
-    const navigate = useNavigate();
+const ResetPasswordPage = () => {
 
     const {
         formData,
         onChange,
         reset
     } = useInputText({
-        email: "",
+        password: "",
     });
 
     const handleSubmit = (e) => {
@@ -30,19 +27,14 @@ const ForgotPasswordPage = () => {
                         className='space-y-6'
                     >
                         <InputText
-                            type="email"
-                            placeholder="Enter email"
-                            name="email"
-                            label="Email"
-                            value={formData.email}
+                            type="password"
+                            placeholder="Enter password"
+                            name="password"
+                            label="Password"
+                            value={formData.password}
                             onChange={onChange}
                         />
-                        < Button text="send Link" type="submit" fullWidth />
-                        <p className='font-bold text-center hover:underline cursor-pointer'
-                            onClick={() => {
-                                navigate('/auth/login')
-                            }}
-                        >Back to login</p>
+                        < Button text="Reset password" type="submit" fullWidth />
                     </form>
                 </div>
             </CommonLayout>
@@ -50,4 +42,4 @@ const ForgotPasswordPage = () => {
     )
 }
 
-export default ForgotPasswordPage
+export default ResetPasswordPage
