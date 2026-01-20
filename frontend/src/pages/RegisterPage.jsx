@@ -4,10 +4,15 @@ import CommonLayout from '../layouts/CommonLayout'
 import useInputText from '../Hooks/InputHooks'
 import Button from '../common/Button'
 import { useNavigate } from 'react-router-dom'
+import useLoading from '../Hooks/LoadingHook'
+import { register } from '../services/auth.service'
+import Loading from '../components/Loading'
 
 const RegisterPage = () => {
 
   const navigate = useNavigate();
+
+
 
   const {
     formData,
@@ -15,19 +20,35 @@ const RegisterPage = () => {
     reset
   } = useInputText({
     firstName: "",
-    secondName: "",
+    lastName: "",
     email: "",
     password: "",
   })
 
-  const handleSubmit = (e) => {
+  const {
+    isLoading,
+    LoadingStart,
+    LoadingStop,
+  } = useLoading(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    reset();
+    LoadingStart();
+
+    try {
+      await register(formData);
+      navigate('/auth/login');
+      reset();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      LoadingStop();
+    }
   }
 
   return (
     <>
+      {isLoading && <Loading />}
       < CommonLayout>
         <div className='flex bg-gray-100 p-5 shadow-2xl flex-col w-96'>
           <form onSubmit={handleSubmit}
@@ -44,7 +65,7 @@ const RegisterPage = () => {
             <InputText
               type="text"
               placeholder="Enter second name"
-              name="secondName"
+              name="lastName"
               label="Second name"
               value={formData.secondName}
               onChange={onChange}
@@ -65,15 +86,25 @@ const RegisterPage = () => {
               value={formData.password}
               onChange={onChange}
             />
-            <Button type="submit" text="Create account" fullWidth />
-            <Button type="button" text="Continue with google" fullWidth onClick={() => {
-              console.log("continue with google is triggered")
-            }} />
+            <Button
+              type="submit"
+              text={isLoading ? "Creating...." : "Create an account"}
+              fullWidth
+              disabled={isLoading}
+            />
+            <Button
+              type="button"
+              text="Continue with google"
+              fullWidth
+              onClick={() => {
+                console.log("continue with google is triggered")
+              }}
+            />
             <p className='text-center'>Already have an account? <span className='font-bold cursor-pointer hover:underline'
               onClick={() => {
                 navigate('/auth/login');
               }}
-            >Sing in</span></p>
+            >Sign in</span></p>
           </form>
         </div>
       </CommonLayout>
