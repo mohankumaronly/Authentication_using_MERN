@@ -37,11 +37,21 @@ const RegisterPage = () => {
 
     try {
       await register(formData);
-      navigate('/auth/login');
       reset();
+      navigate('/auth/login');
     } catch (error) {
-      console.error(error);
-    } finally {
+      if (error.response) {
+        const status = error.response.status;
+        const message =
+          error.response.data?.message || "Something went wrong";
+        alert(message);
+      } else if (error.request) {
+        alert("Network error. Please try again later.");
+      } else {
+        alert(error.message);
+      }
+    }
+    finally {
       LoadingStop();
     }
   }
@@ -67,7 +77,7 @@ const RegisterPage = () => {
               placeholder="Enter second name"
               name="lastName"
               label="Second name"
-              value={formData.secondName}
+              value={formData.lastName}
               onChange={onChange}
             />
             <InputText

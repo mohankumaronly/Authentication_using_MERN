@@ -14,4 +14,4 @@ const useLoading = (initialValues = false) => {
     }
 }
 
-export default useLoading        
+export default useLoading
