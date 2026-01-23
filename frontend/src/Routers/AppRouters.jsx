@@ -14,6 +14,7 @@ const AppRouters = () => {
             <Route path='/auth/login' element={<Login />} />
             <Route path='/auth/forgot-password' element={<ForgotPasswordPage />} />
             <Route path='/auth/reset-password' element={< ResetPasswordPage />} />
+            <Route path='/auth/verify-email/:token' element={< ResetPasswordPage />} />
         </Routes>
     )
 }
