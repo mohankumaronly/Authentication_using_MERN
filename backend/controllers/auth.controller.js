@@ -49,7 +49,7 @@ const register = async (req, res) => {
         user.emailVerificationToken = hashedVerifyToken;
         user.emailVerificationExpire = Date.now() + 24 * 60 * 60 * 1000;
         await user.save();
-        const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verifyToken}`;
+        const verifyUrl = `${process.env.FRONTEND_URL}/auth/verify-email/${verifyToken}`;
         await sendEmail({
             to: user.email,
             subject: "Verify your email",

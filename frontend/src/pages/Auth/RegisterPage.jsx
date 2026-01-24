@@ -1,12 +1,11 @@
-import React from 'react'
-import InputText from '../common/InputText'
-import CommonLayout from '../layouts/CommonLayout'
-import useInputText from '../Hooks/InputHooks'
-import Button from '../common/Button'
-import { useNavigate } from 'react-router-dom'
-import useLoading from '../Hooks/LoadingHook'
-import { register } from '../services/auth.service'
-import Loading from '../components/Loading'
+import { useNavigate } from "react-router-dom";
+import useInputText from "../../Hooks/InputHooks";
+import useLoading from "../../Hooks/LoadingHook";
+import { register } from "../../services/auth.service";
+import CommonLayout from "../../layouts/CommonLayout";
+import Loading from "../../components/Loading";
+import InputText from "../../common/InputText";
+import Button from "../../common/Button";
 
 const RegisterPage = () => {
 

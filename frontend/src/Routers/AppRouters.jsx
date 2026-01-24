@@ -1,11 +1,13 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import LandingPage from '../pages/LandingPage'
-import RegisterPage from '../pages/RegisterPage'
-import Login from '../pages/Login'
-import ForgotPasswordPage from '../pages/ForgotPasswordPage'
-import ResetPasswordPage from '../pages/ResetPasswordPage'
-import VerificationPage from '../pages/VerificationPage'
+import LandingPage from '../pages/Auth/LandingPage'
+import RegisterPage from '../pages/Auth/RegisterPage'
+import Login from '../pages/Auth/Login'
+import ForgotPasswordPage from '../pages/Auth/ForgotPasswordPage'
+import ResetPasswordPage from '../pages/Auth/ResetPasswordPage'
+import VerificationPage from '../pages/Auth/VerificationPage'
+import VerificationHandler from '../pages/Auth/VerificationHandler'
+import HomePage from '../pages/Home/HomePage'
 
 const AppRouters = () => {
     return (
@@ -15,8 +17,9 @@ const AppRouters = () => {
             <Route path='/auth/login' element={<Login />} />
             <Route path='/auth/forgot-password' element={<ForgotPasswordPage />} />
             <Route path='/auth/reset-password' element={< ResetPasswordPage />} />
-            <Route path='/auth/verify-email/:token' element={< ResetPasswordPage />} />
             <Route path='/auth/verification' element={< VerificationPage />} />
+            <Route path='/auth/verify-email/:token' element={< VerificationHandler />} />
+            <Route path='/home' element={< HomePage />} />
         </Routes>
     )
 }

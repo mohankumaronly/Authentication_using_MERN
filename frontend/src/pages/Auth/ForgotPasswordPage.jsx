@@ -1,8 +1,8 @@
-import CommonLayout from '../layouts/CommonLayout'
-import useInputText from '../Hooks/InputHooks'
-import InputText from '../common/InputText';
-import Button from '../common/Button';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../common/Button';
+import InputText from '../../common/InputText';
+import useInputText from '../../Hooks/InputHooks';
+import CommonLayout from '../../layouts/CommonLayout';
 
 const ForgotPasswordPage = () => {
 

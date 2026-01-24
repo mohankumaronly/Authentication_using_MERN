@@ -5,5 +5,5 @@ export const register = (data) => {
 }
 
 export const verifyEmail = (token) => {
-    return api.post(`/auth/verify-email/${token}`);
+  return api.get(`/auth/verify-email/${token}`);
 }

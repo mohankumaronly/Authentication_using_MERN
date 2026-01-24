@@ -1,7 +1,7 @@
-import React from 'react'
-import Button from '../common/Button'
 import { useNavigate } from 'react-router-dom'
-import CommonLayout from '../layouts/CommonLayout';
+import CommonLayout from '../../layouts/CommonLayout';
+import Button from '../../common/Button';
+
 
 const LandingPage = () => {
   const navigate = useNavigate();
