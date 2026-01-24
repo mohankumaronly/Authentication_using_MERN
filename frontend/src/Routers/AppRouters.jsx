@@ -5,6 +5,7 @@ import RegisterPage from '../pages/RegisterPage'
 import Login from '../pages/Login'
 import ForgotPasswordPage from '../pages/ForgotPasswordPage'
 import ResetPasswordPage from '../pages/ResetPasswordPage'
+import VerificationPage from '../pages/VerificationPage'
 
 const AppRouters = () => {
     return (
@@ -15,6 +16,7 @@ const AppRouters = () => {
             <Route path='/auth/forgot-password' element={<ForgotPasswordPage />} />
             <Route path='/auth/reset-password' element={< ResetPasswordPage />} />
             <Route path='/auth/verify-email/:token' element={< ResetPasswordPage />} />
+            <Route path='/auth/verification' element={< VerificationPage />} />
         </Routes>
     )
 }

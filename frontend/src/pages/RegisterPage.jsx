@@ -38,7 +38,7 @@ const RegisterPage = () => {
     try {
       await register(formData);
       reset();
-      navigate('/auth/login');
+      navigate('/auth/verification');
     } catch (error) {
       if (error.response) {
         const status = error.response.status;
