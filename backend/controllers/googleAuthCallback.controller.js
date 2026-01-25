@@ -12,6 +12,16 @@ const cookieOptions = {
 };
 
 const googleAuthStart = (req, res) => {
+
+    const state = crypto.randomBytes(16).toString("hex");
+
+    res.cookie("oauth_state", state, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 10 * 60 * 1000,
+    });
+
     const params = {
         client_id: process.env.GOOGLE_CLIENT_ID,
         redirect_uri: process.env.GOOGLE_CALLBACK_URL,
@@ -19,6 +29,7 @@ const googleAuthStart = (req, res) => {
         scope: "openid email profile",
         access_type: "offline",
         prompt: "consent",
+        state
     };
 
     const googleAuthUrl =
@@ -27,9 +38,6 @@ const googleAuthStart = (req, res) => {
 
     return res.redirect(googleAuthUrl);
 };
-
-module.exports = { googleAuthStart };
-
 
 const googleAuthCallback = async (req, res) => {
     try {
@@ -41,6 +49,11 @@ const googleAuthCallback = async (req, res) => {
                 message: "Authorization code missing",
             });
         }
+
+        if (req.query.state !== req.cookies.oauth_state) {
+            return res.status(403).json({ message: "Invalid OAuth state" });
+        }
+
 
         const tokenResponse = await axios.post(
             "https://oauth2.googleapis.com/token",
@@ -121,7 +134,7 @@ const googleAuthCallback = async (req, res) => {
                 maxAge: 15 * 60 * 1000,
             })
             .cookie("refreshToken", rawRefreshToken, {
-                cookieOptions,
+                ...cookieOptions,
                 maxAge: refreshTokenExpiry,
             });
 
