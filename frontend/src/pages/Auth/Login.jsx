@@ -3,6 +3,8 @@ import useInputText from '../../Hooks/InputHooks';
 import CommonLayout from '../../layouts/CommonLayout';
 import InputText from '../../common/InputText';
 import Button from '../../common/Button';
+import useLoading from '../../Hooks/LoadingHook';
+import { login } from '../../services/auth.service';
 
 const Login = () => {
 
@@ -18,10 +20,31 @@ const Login = () => {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const {
+    isLoading,
+    LoadingStart,
+    LoadingStop,
+  } = useLoading();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
-    reset();
+    LoadingStart();
+    try {
+      await login(formData);
+      reset();
+      navigate('/home');
+    } catch (error) {
+      if (error.response) {
+        const message = error.response.data?.message || "Something went wrong"
+        alert(message);
+      } else if (error.request) {
+        alert("Network error. Please try again later.");
+      } else {
+        alert(error.message);
+      }
+    } finally {
+      LoadingStop();
+    }
   }
 
   return (
@@ -50,7 +73,12 @@ const Login = () => {
             <p className='text-end font-bold hover:underline cursor-pointer'
               onClick={() => navigate('/auth/forgot-password')}
             >Forgot password?</p>
-            <Button type="submit" text="Login account" fullWidth />
+            <Button
+              type="submit"
+              text={isLoading ? "Login....." : "Login account"}
+              fullWidth
+              disable={isLoading}
+            />
             <p className='text-center'>Don't have account? <span className='font-bold cursor-pointer hover:underline'
               onClick={() => {
                 navigate('/auth/register');

@@ -19,7 +19,13 @@ const getMe = async (req, res) => {
 
         return res.status(200).json({
             authenticated: true,
-            user,
+            user: {
+                id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                isEmailVerified: user.isEmailVerified,
+            },
         });
 
     } catch (err) {
