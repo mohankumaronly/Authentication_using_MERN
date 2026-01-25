@@ -41,19 +41,24 @@ const googleAuthStart = (req, res) => {
 
 const googleAuthCallback = async (req, res) => {
     try {
-        const { code } = req.query;
-
+        const { code, state } = req.query;
         if (!code) {
-            return res.status(400).json({
-                success: false,
-                message: "Authorization code missing",
-            });
+            return res.redirect(
+                `${process.env.FRONTEND_URL}/auth/login?error=oauth_missing_code`
+            );
         }
 
-        if (req.query.state !== req.cookies.oauth_state) {
-            return res.status(403).json({ message: "Invalid OAuth state" });
+        if (state !== req.cookies.oauth_state) {
+            return res.redirect(
+                `${process.env.FRONTEND_URL}/auth/login?error=oauth_invalid_state`
+            );
         }
 
+        res.clearCookie("oauth_state", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+        });
 
         const tokenResponse = await axios.post(
             "https://oauth2.googleapis.com/token",
@@ -81,20 +86,17 @@ const googleAuthCallback = async (req, res) => {
         } = googleUser.data;
 
         if (!email_verified) {
-            return res.status(403).json({
-                success: false,
-                message: "Google email not verified",
-            });
+            return res.redirect(
+                `${process.env.FRONTEND_URL}/auth/login?error=google_email_not_verified`
+            );
         }
 
         let user = await User.findOne({ email });
 
         if (user && user.authProvider === "local") {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "This email is registered with email & password. Please login normally.",
-            });
+            return res.redirect(
+                `${process.env.FRONTEND_URL}/auth/login?error=email_exists`
+            );
         }
 
         if (!user) {
@@ -138,14 +140,14 @@ const googleAuthCallback = async (req, res) => {
                 maxAge: refreshTokenExpiry,
             });
 
-        return res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+        return res.redirect(`${process.env.FRONTEND_URL}/home`);
     } catch (error) {
         console.error("Google Auth Error:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Google authentication failed",
-        });
+        return res.redirect(
+            `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`
+        );
     }
 };
+
 
 module.exports = { googleAuthStart, googleAuthCallback };

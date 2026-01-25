@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 import useInputText from "../../Hooks/InputHooks";
 import useLoading from "../../Hooks/LoadingHook";
 import { register } from "../../services/auth.service";
@@ -11,7 +12,28 @@ const RegisterPage = () => {
 
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
 
+  useEffect(() => {
+    const error = searchParams.get("error");
+
+    if (!error) return;
+
+    const errorMap = {
+      email_exists:
+        "This email is registered with email & password. Please login normally.",
+      oauth_failed:
+        "Google login failed. Please try again.",
+      oauth_invalid_state:
+        "Security validation failed. Please try again.",
+      google_email_not_verified:
+        "Your Google email is not verified.",
+    };
+
+    alert(errorMap[error] || "Something went wrong.");
+    
+    navigate("/auth/login", { replace: true });
+  }, [searchParams, navigate]);
 
   const {
     formData,
@@ -106,7 +128,7 @@ const RegisterPage = () => {
               text="Continue with google"
               fullWidth
               onClick={() => {
-                console.log("continue with google is triggered")
+                window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
               }}
             />
             <p className='text-center'>Already have an account? <span className='font-bold cursor-pointer hover:underline'
