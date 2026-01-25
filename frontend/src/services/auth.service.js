@@ -23,3 +23,7 @@ export const getMe = () => {
 export const forgotPassword = (data) => {
   return api.post('/auth/forgot-password', data);
 }
+
+export const resetPassword = (token, data) => {
+  return api.post(`/auth/reset-password/${token}`, data);
+}

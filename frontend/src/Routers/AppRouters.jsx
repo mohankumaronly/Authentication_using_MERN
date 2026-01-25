@@ -16,11 +16,11 @@ const AppRouters = () => {
             <Route path='/auth/register' element={<RegisterPage />} />
             <Route path='/auth/login' element={<Login />} />
             <Route path='/auth/forgot-password' element={<ForgotPasswordPage />} />
-            <Route path='/auth/reset-password' element={< ResetPasswordPage />} />
             <Route path='/auth/verification' element={< VerificationPage />} />
             <Route path='/auth/verify-email/:token' element={< VerificationHandler />} />
             <Route path='/auth/forgot-password-link' element={< VerificationLinkPage />} />
-            <Route path='/home' element={< HomePage />} />
+            <Route path='/auth/reset-password/:token' element={< ResetPasswordPage />} />
+            <Route path='/home' element={< HomePage />} /> 
         </Routes>
     )
 }
