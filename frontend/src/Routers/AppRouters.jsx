@@ -11,6 +11,7 @@ import VerificationLinkPage from "../pages/Auth/VerificationLinkPage";
 
 import RequireAuth from "../components/RequireAuth";
 import RedirectIfAuth from "../components/RedirectIfAuth";
+import NotFoundPage from "../pages/NotFound/NotFoundPage";
 
 const AppRouters = () => {
     return (
@@ -48,6 +49,7 @@ const AppRouters = () => {
                     </RequireAuth>
                 }
             />
+            <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );
 };
