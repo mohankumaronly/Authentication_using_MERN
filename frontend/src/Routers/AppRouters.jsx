@@ -1,4 +1,3 @@
-import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import LandingPage from '../pages/Auth/LandingPage'
 import RegisterPage from '../pages/Auth/RegisterPage'
@@ -8,6 +7,7 @@ import ResetPasswordPage from '../pages/Auth/ResetPasswordPage'
 import VerificationPage from '../pages/Auth/VerificationPage'
 import VerificationHandler from '../pages/Auth/VerificationHandler'
 import HomePage from '../pages/Home/HomePage'
+import VerificationLinkPage from '../pages/Auth/VerificationLinkPage'
 
 const AppRouters = () => {
     return (
@@ -19,6 +19,7 @@ const AppRouters = () => {
             <Route path='/auth/reset-password' element={< ResetPasswordPage />} />
             <Route path='/auth/verification' element={< VerificationPage />} />
             <Route path='/auth/verify-email/:token' element={< VerificationHandler />} />
+            <Route path='/auth/forgot-password-link' element={< VerificationLinkPage />} />
             <Route path='/home' element={< HomePage />} />
         </Routes>
     )
