@@ -1,19 +1,81 @@
-# MERN Stack Authentication System
+# 🔐 MERN Stack Authentication System (Local + Google OAuth)
 
-A robust and secure authentication system built with the **MERN stack** (MongoDB, Express, React, Node.js). This project implements a complete user lifecycle, featuring email verification, secure JWT session management via HTTP-only cookies, and a comprehensive password recovery workflow.
+A **production-ready authentication system** built with the **MERN stack** (MongoDB, Express, React, Node.js).
+This project implements **secure, cookie-based authentication**, **Google OAuth**, **email verification**, **refresh tokens**, and **frontend route protection**.
 
 ---
 
 ## 🚀 Features
 
-* **Secure Registration**: User signup with input validation using **Joi**.
-* **Email Verification**: Automated verification links sent via **Nodemailer** using **Crypto**-generated tokens.
-* **JWT Authentication**: Secure login issuing Access and Refresh tokens.
-* **Cookie-Based Security**: Tokens are stored in **HTTP-only cookies** using `cookie-parser` to mitigate XSS attacks.
-* **Password Recovery**: Secure "Forgot Password" and "Reset Password" flow.
-* **Security Headers**: Integrated **Helmet** for setting secure HTTP headers.
-* **Rate Limiting**: Protection against brute-force attacks on Login and Forgot Password routes.
-* **Persistent Sessions**: `/me` endpoint to fetch authenticated user data via a `protect` middleware.
+### 🔑 Authentication
+
+* **Local Authentication** (Email + Password)
+* **Google OAuth 2.0 Login**
+* **JWT-based Access & Refresh Tokens**
+* **HTTP-only Cookie Sessions** (XSS safe)
+
+### 📧 Email Workflows
+
+* Email verification after registration
+* Secure password reset (forgot/reset password)
+* Token expiration handling
+
+### 🔒 Security
+
+* HTTP-only, SameSite cookies
+* Access token rotation via refresh tokens
+* Rate limiting on sensitive routes
+* Secure headers using Helmet
+* CSRF-safe OAuth state validation
+
+### 🧠 Session Management
+
+* `/me` endpoint to fetch authenticated user
+* Silent refresh when access token expires
+* Auto logout if refresh token is invalid
+* Persistent login across reloads
+
+### 🧭 Frontend UX
+
+* Protected routes (`RequireAuth`)
+* Redirect logged-in users away from auth pages
+* OAuth error handling via query params
+* Centralized AuthContext
+* 404 Not Found page
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+
+* Node.js + Express
+* MongoDB + Mongoose
+* JWT (Access & Refresh Tokens)
+* Google OAuth 2.0
+* Nodemailer (Email)
+* Helmet, CORS, Rate Limiting
+
+### Frontend
+
+* React (Vite)
+* React Router v6
+* Context API
+* Axios (with interceptors)
+* Tailwind CSS
+
+---
+
+## 🔐 Authentication Flow (High Level)
+
+```text
+Login / OAuth
+→ Access Token (15 min) stored in httpOnly cookie
+→ Refresh Token stored securely in DB + cookie
+→ API request fails (401)
+→ Silent refresh (/refresh-token)
+→ Retry original request
+```
 
 ---
 
@@ -21,29 +83,18 @@ A robust and secure authentication system built with the **MERN stack** (MongoDB
 
 ### Auth Routes
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `POST` | `/api/auth/register` | Register user & send verification email. |
-| `POST` | `/api/auth/login` | Authenticate user & issue cookies (Rate limited). |
-| `POST` | `/api/auth/verify-email/:token` | Verify account via email link. |
-| `POST` | `/api/auth/refresh-token` | Renew Access Token using Refresh Token. |
-| `POST` | `/api/auth/forgot-password` | Request password reset link (Rate limited). |
-| `POST` | `/api/auth/reset-password/:token` | Update password with secure token. |
-| `POST` | `/api/auth/logout` | Clear cookies and terminate session. |
-| `GET` | `/api/auth/me` | Get current authenticated user (Protected). |
-
----
-
-## 🔐 Security & Dependencies
-
-This project leverages industry-standard packages to ensure data integrity and protection:
-
-* **Authentication**: `jsonwebtoken` for stateless auth and `bcrypt` for password hashing.
-* **Validation**: `joi` for strict schema-based request validation.
-* **Middleware**: `cookie-parser` for handling JWTs and `cors` for cross-origin resource sharing.
-* **Security**: `helmet` for header security and `express-rate-limit` to prevent abuse.
-* **Email**: `nodemailer` for SMTP-based transactional emails.
-* **Tokens**: `crypto` for generating high-entropy verification and reset tokens.
+| Method | Endpoint                          | Description                             |
+| ------ | --------------------------------- | --------------------------------------- |
+| POST   | `/api/auth/register`              | Register user & send verification email |
+| POST   | `/api/auth/login`                 | Login user (rate limited)               |
+| GET    | `/api/auth/google`                | Start Google OAuth                      |
+| GET    | `/api/auth/google/callback`       | Google OAuth callback                   |
+| POST   | `/api/auth/verify-email/:token`   | Verify email                            |
+| POST   | `/api/auth/forgot-password`       | Send reset password email               |
+| POST   | `/api/auth/reset-password/:token` | Reset password                          |
+| POST   | `/api/auth/refresh-token`         | Refresh access token                    |
+| POST   | `/api/auth/logout`                | Logout & revoke refresh token           |
+| GET    | `/api/auth/me`                    | Get authenticated user                  |
 
 ---
 
@@ -51,64 +102,198 @@ This project leverages industry-standard packages to ensure data integrity and p
 
 ### Prerequisites
 
-* Node.js (v18+)
-* MongoDB (Local or Atlas)
-* SMTP Credentials (Gmail App Password or Mailtrap)
+* Node.js v18+
+* MongoDB (local or Atlas)
+* Google OAuth credentials
+* SMTP credentials (Gmail / Mailtrap)
 
-### Installation
+---
 
-1. **Clone the repository**
+### 🔧 Installation
+
 ```bash
-git clone https://github.com/mohankumaronly/Authentication_using_MERN.git auth
-cd auth
-
+git clone https://github.com/mohankumaronly/Authentication_using_MERN.git
+cd Authentication_using_MERN
 ```
 
+---
 
-2. **Install Dependencies**
+### 📦 Backend Setup
+
 ```bash
+cd backend
 npm install
-
 ```
 
+Create `.env`:
 
-3. **Environment Variables**
-Create a `.env` file in the root directory:
 ```env
 PORT=8000
 MONGODB_URL=your_mongodb_connection_string
-CLIENT_URL=http://localhost:5173
 JWT_SECRET_KEY=your_jwt_secret
+
+FRONTEND_URL=http://localhost:5173
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CALLBACK_URL=http://localhost:8000/api/auth/google/callback
+
 EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
-
+EMAIL_PASS=your_email_app_password
 ```
 
+Run backend:
 
-4. **Run the Server**
 ```bash
-# Production mode
-npm start
-
-# Development mode (with nodemon)
 npm run dev
-
 ```
 
+---
 
+### 🎨 Frontend Setup
+
+```bash
+cd frontend
+npm install
+```
+
+Create `.env`:
+
+```env
+VITE_API_URL=http://localhost:8000/api
+```
+
+Run frontend:
+
+```bash
+npm run dev
+```
 
 ---
 
 ## 📂 Project Structure
 
-```text
-├── src/
-│   ├── controllers/    # Request handlers (register, login, reset-password)
-│   ├── middlewares/    # protect, validate (Joi), and limiter
-│   ├── models/         # Mongoose User Schema
-│   ├── routes/         # authRouter definitions
-│   ├── utils/          # Email service (Nodemailer) & Token logic
-│   └── app.js          # Express app, Helmet, and Cookie-parser config
-└── .env                # Environment configuration
+### Backend
 
+```text
+backend
+│   .dockerignore
+│   .env
+│   .env.example
+│   Dockerfile
+│   Dockerfile.dev
+│   nodemon.json
+│   package.json
+│   server.js
+│
+├── configuration
+│   └── db.js
+│
+├── controllers
+│   ├── auth.controller.js
+│   ├── auth.forgot.controller.js
+│   ├── auth.me.controller.js
+│   ├── auth.refreshToken.controller.js
+│   ├── googleAuthCallback.controller.js
+│   └── verifyEmail.controller.js
+│
+├── middlewares
+│   ├── rate.limiter.js
+│   └── token.verification.js
+│
+├── models
+│   ├── auth.model.js
+│   └── auth.refreshToken.js
+│
+├── routers
+│   └── auth.routers.js
+│
+├── utils
+│   ├── sendEmail.js
+│   └── Emails
+│       ├── emailVerificationTemplate.js
+│       └── resetPasswordTemplate.js
+│
+└── validators
+    ├── auth.validate.js
+    └── auth.validators.js
 ```
+
+---
+
+### Frontend
+
+```text
+frontend
+│   .dockerignore
+│   .env
+│   .env.example
+│   Dockerfile
+│   Dockerfile.dev
+│   nginx.conf
+│   package.json
+│   vite.config.js
+│
+└── src
+    ├── App.jsx
+    ├── main.jsx
+    ├── index.css
+    │
+    ├── common
+    │   ├── Button.jsx
+    │   └── InputText.jsx
+    │
+    ├── components
+    │   ├── Loading.jsx
+    │   ├── RedirectIfAuth.jsx
+    │   ├── RequireAuth.jsx
+    │   └── HealthCheck.jsx
+    │
+    ├── context
+    │   └── AuthContext.jsx
+    │
+    ├── Hooks
+    │   ├── InputHooks.js
+    │   └── LoadingHook.js
+    │
+    ├── layouts
+    │   └── CommonLayout.jsx
+    │
+    ├── pages
+    │   ├── Auth
+    │   │   ├── Login.jsx
+    │   │   ├── RegisterPage.jsx
+    │   │   ├── ForgotPasswordPage.jsx
+    │   │   ├── ResetPasswordPage.jsx
+    │   │   ├── VerificationPage.jsx
+    │   │   ├── VerificationHandler.jsx
+    │   │   └── VerificationLinkPage.jsx
+    │   │
+    │   ├── Home
+    │   │   └── HomePage.jsx
+    │   │
+    │   └── NotFound
+    │       └── NotFoundPage.jsx
+    │
+    ├── Routers
+    │   └── AppRouters.jsx
+    │
+    └── services
+        ├── api.js
+        └── auth.service.js
+```
+
+---
+
+## 🏁 Production Notes
+
+* Uses **httpOnly cookies** (no localStorage)
+* Supports **silent token refresh**
+* Secure OAuth state validation
+* Ready for Docker & cloud deployment
+* Clean separation of concerns (controllers, services, context)
+
+---
+
+## 📜 License
+
+MIT License
