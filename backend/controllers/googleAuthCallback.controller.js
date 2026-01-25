@@ -101,8 +101,8 @@ const googleAuthCallback = async (req, res) => {
 
         if (!user) {
             user = await User.create({
-                firstName: given_name,
-                lastName: family_name,
+                firstName: given_name || "",
+                lastName: family_name || "",
                 email,
                 authProvider: "google",
                 googleId,

@@ -45,7 +45,8 @@ const refreshTokenController = async (req, res) => {
     const accessToken = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "15m" }
+      { expiresIn: "15m" },
+      // { expiresIn: "30s" } // for testing only use it
     );
 
     return res
@@ -54,6 +55,7 @@ const refreshTokenController = async (req, res) => {
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 15 * 60 * 1000,
+        // maxAge: 30 * 1000, // for testing only use it
       })
       .status(200)
       .json({

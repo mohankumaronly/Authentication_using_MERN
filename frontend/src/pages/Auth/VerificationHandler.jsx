@@ -1,54 +1,64 @@
-import React, { useEffect, useState } from 'react'
-import CommonLayout from '../../layouts/CommonLayout'
-import Button from '../../common/Button'
-import { useNavigate, useParams } from 'react-router-dom'
-import { verifyEmail } from '../../services/auth.service'
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { verifyEmail } from "../../services/auth.service";
+import CommonLayout from "../../layouts/CommonLayout";
+import Button from "../../common/Button";
 
 const VerificationHandler = () => {
-    const navigate = useNavigate()
-    const { token } = useParams()
+  const { token } = useParams();
+  const navigate = useNavigate();
+  const hasRun = useRef(false);
 
-    const [status, setStatus] = useState("loading")
+  const [status, setStatus] = useState("loading");
 
-    useEffect(() => {
-        verifyEmail(token)
-            .then(() => {
-                setStatus("success")
-                setTimeout(() => {
-                    navigate('/home')
-                }, 2000)
-            })
-            .catch(() => {
-                setStatus("error")
-            })
-    }, [token, navigate])
+  useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
 
-    return (
-        <CommonLayout>
-            <div className="flex flex-col items-center justify-center space-y-4">
-                {status === "loading" && <h1>Verifying your email… ⏳</h1>}
+    verifyEmail(token)
+      .then(() => {
+        setStatus("success");
+      })
+      .catch(() => {
+        setStatus("error");
+      });
+  }, [token]);
 
-                {status === "success" && (
-                    <>
-                        <h1 className="text-green-600 font-bold">
-                            Email verified successfully
-                        </h1>
-                        <Button
-                            text="Let’s Start"
-                            type="button"
-                            onClick={() => navigate('/home')}
-                        />
-                    </>
-                )}
+  return (
+    <CommonLayout>
+      <div className="flex flex-col items-center justify-center space-y-4">
+        {status === "loading" && <h1>Verifying your email… ⏳</h1>}
 
-                {status === "error" && (
-                    <h1 className="text-red-600 font-bold">
-                        Verification failed or link expired
-                    </h1>
-                )}
-            </div>
-        </CommonLayout>
-    )
-}
+        {status === "success" && (
+          <>
+            <h1 className="text-green-600 font-bold">
+              Email verified successfully
+            </h1>
+            <p>Please log in to continue.</p>
 
-export default VerificationHandler
+            <Button
+              text="Go to Login"
+              type="button"
+              onClick={() => navigate("/auth/login")}
+            />
+          </>
+        )}
+
+        {status === "error" && (
+          <>
+            <h1 className="text-red-600 font-bold">
+              Verification failed or link expired
+            </h1>
+            <Button
+              text="Back to Login"
+              type="button"
+              onClick={() => navigate("/auth/login")}
+            />
+          </>
+        )}
+      </div>
+    </CommonLayout>
+  );
+};
+
+export default VerificationHandler;
