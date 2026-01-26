@@ -182,40 +182,49 @@ backend
 │   Dockerfile
 │   Dockerfile.dev
 │   nodemon.json
+│   package-lock.json
 │   package.json
 │   server.js
+│   
+├───configuration
+│       db.js
+│       
+├───middlewares
+│       rate.limiter.js
+│       token.verification.js
 │
-├── configuration
-│   └── db.js
+├───modules
+│   └───auth
+│       ├───controllers
+│       │       auth.controller.js
+│       │       auth.forgot.controller.js
+│       │       auth.me.controller.js
+│       │       auth.refreshToken.controller.js
+│       │       googleAuthCallback.controller.js
+│       │       verifyEmail.controller.js
+│       │
+│       ├───models
+│       │       auth.model.js
+│       │       auth.refreshToken.js
+│       │
+│       ├───routers
+│       ├───routers
+│       │       auth.routers.js
+│       │
+│       │
+│       └───validators
+│               auth.validate.js
+│               auth.validators.js
 │
-├── controllers
-│   ├── auth.controller.js
-│   ├── auth.forgot.controller.js
-│   ├── auth.me.controller.js
-│   ├── auth.refreshToken.controller.js
-│   ├── googleAuthCallback.controller.js
-│   └── verifyEmail.controller.js
+│               auth.validators.js
 │
-├── middlewares
-│   ├── rate.limiter.js
-│   └── token.verification.js
 │
-├── models
-│   ├── auth.model.js
-│   └── auth.refreshToken.js
-│
-├── routers
-│   └── auth.routers.js
-│
-├── utils
-│   ├── sendEmail.js
-│   └── Emails
-│       ├── emailVerificationTemplate.js
-│       └── resetPasswordTemplate.js
-│
-└── validators
-    ├── auth.validate.js
-    └── auth.validators.js
+└───utils
+    │   sendEmail.js
+    │
+    └───emails
+            emailVerificationTemplate.js
+            resetPasswordTemplate.js
 ```
 
 ---
