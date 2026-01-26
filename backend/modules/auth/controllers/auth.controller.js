@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require("../models/auth.model");
 const RefreshToken = require("../models/auth.refreshToken");
-const sendEmail = require('../utils/sendEmail');
-const verifyEmailTemplate = require("../utils/Emails/emailVerificationTemplate");
+const sendEmail = require("../../../utils/sendEmail");
+const verifyEmailTemplate = require("../../../utils/emails/emailVerificationTemplate");
 
 const cookieOptions = {
     httpOnly: true,

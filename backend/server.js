@@ -1,10 +1,10 @@
 require("dotenv").config();
+const databaseConnection = require("./configuration/db");
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
-const databaseConnection = require("./configuration/db");
-const authRouter = require("./routers/auth.routers");
+const authRouter = require("./modules/auth/routers/auth.routers");
 
 const app = express();
 const PORT = process.env.PORT || 8000;

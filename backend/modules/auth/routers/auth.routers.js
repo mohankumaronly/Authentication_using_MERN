@@ -1,14 +1,14 @@
 const express = require('express');
 const validate = require('../validators/auth.validate');
-const { register, login, logOut } = require('../controllers/auth.controller');
 const { registerSchema, loginSchema, resetPasswordSchema, forgotPasswordSchema } = require('../validators/auth.validators');
-const { resetPassword, forgotPassword } = require('../controllers/auth.forgot.controller');
-const limiter = require('../middlewares/rate.limiter');
+const limiter = require('../../../middlewares/rate.limiter');
+const protect = require('../../../middlewares/token.verification');
+const { register, login, logOut } = require('../controllers/auth.controller');
+const { forgotPassword, resetPassword } = require('../controllers/auth.forgot.controller');
 const refreshTokenController = require('../controllers/auth.refreshToken.controller');
-const protect = require('../middlewares/token.verification');
 const verifyEmail = require('../controllers/verifyEmail.controller');
 const getMe = require('../controllers/auth.me.controller');
-const { googleAuthCallback, googleAuthStart } = require('../controllers/googleAuthCallback.controller');
+const { googleAuthStart, googleAuthCallback } = require('../controllers/googleAuthCallback.controller');
 
 const authRouter = express.Router();
 authRouter.post('/register', validate(registerSchema), register);
