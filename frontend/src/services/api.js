@@ -24,7 +24,6 @@ api.interceptors.response.use(
     const status = error.response?.status;
     const url = originalRequest?.url || "";
 
-    // 🔴 Rate limit
     if (status === 429) {
       alert(
         error.response?.data?.message ||
@@ -33,7 +32,6 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // ❌ Ignore auth routes (CRITICAL)
     if (
       status === 401 &&
       (
@@ -45,17 +43,14 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // ❌ Not an auth error
     if (status !== 401) {
       return Promise.reject(error);
     }
 
-    // ❌ Prevent infinite retry
     if (originalRequest._retry) {
       return Promise.reject(error);
     }
 
-    // 🔁 If refresh already in progress, queue request
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
@@ -66,7 +61,7 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      // 🔥 Silent refresh
+      
       await api.post("/auth/refresh-token");
 
       processQueue(null);
