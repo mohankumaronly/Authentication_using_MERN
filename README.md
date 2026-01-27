@@ -1,51 +1,88 @@
-# 🔐 MERN Stack Authentication System (Local + Google OAuth)
+# 🔐 MERN Stack Authentication & Payments System
 
-A **production-ready authentication system** built with the **MERN stack** (MongoDB, Express, React, Node.js).
-This project implements **secure, cookie-based authentication**, **Google OAuth**, **email verification**, **refresh tokens**, and **frontend route protection**.
+*(Authentication Complete · Payments Backend Ready · Frontend Payments WIP)*
+
+A **production-ready authentication system** built with the **MERN stack** (MongoDB, Express, React, Node.js), extended with a **manual UPI-based payment approval system** for premium access.
+
+This project focuses on **secure, cookie-based authentication**, **Google OAuth**, **email workflows**, and a **backend-complete admin-controlled payment system**.
 
 ---
 
 ## 🚀 Features
 
-### 🔑 Authentication
+---
 
-* **Local Authentication** (Email + Password)
-* **Google OAuth 2.0 Login**
-* **JWT-based Access & Refresh Tokens**
-* **HTTP-only Cookie Sessions** (XSS safe)
+## 🔑 Authentication (✅ Completed)
 
-### 📧 Email Workflows
-
-* Email verification after registration
-* Secure password reset (forgot/reset password)
-* Token expiration handling
-
-### 🔒 Security
-
-* HTTP-only, SameSite cookies
-* Access token rotation via refresh tokens
-* Rate limiting on sensitive routes
-* Secure headers using Helmet
-* CSRF-safe OAuth state validation
-
-### 🧠 Session Management
-
-* `/me` endpoint to fetch authenticated user
-* Silent refresh when access token expires
-* Auto logout if refresh token is invalid
-* Persistent login across reloads
-
-### 🧭 Frontend UX
-
-* Protected routes (`RequireAuth`)
-* Redirect logged-in users away from auth pages
-* OAuth error handling via query params
-* Centralized AuthContext
-* 404 Not Found page
+* Local Authentication (Email + Password)
+* Google OAuth 2.0 Login
+* JWT Access & Refresh Tokens
+* HTTP-only cookie-based sessions
+* Silent token refresh
+* Secure logout & token revocation
 
 ---
 
-## 🛠️ Tech Stack
+## 📧 Email Workflows (✅ Completed)
+
+* Email verification after registration
+* Forgot / Reset password flow
+* Token expiration handling
+* Email templates with Nodemailer
+
+---
+
+## 🔒 Security (✅ Completed)
+
+* HTTP-only, SameSite cookies (XSS safe)
+* Refresh token rotation
+* Rate limiting on auth routes
+* Helmet security headers
+* OAuth CSRF-safe state validation
+
+---
+
+## 🧠 Session Management (✅ Completed)
+
+* `/me` endpoint for authenticated user
+* Persistent login across reloads
+* Auto logout on invalid refresh token
+
+---
+
+## 💳 Payments & Access Control (🚧 Backend Complete)
+
+> ⚠️ **Frontend payment UI is under development**
+
+### Implemented (Backend)
+
+* Manual **UPI QR-based payments**
+* One-time & time-based plans
+* UTR submission & deduplication
+* Admin approval / rejection workflow
+* Secure admin-only routes
+* Access enforcement middleware
+* Premium route protection
+* Payment audit trail
+
+### Not Implemented Yet
+
+* Frontend payment UI
+* User payment dashboard
+* Admin payment UI (table)
+
+---
+
+## 👑 Admin Capabilities (✅ Backend Complete)
+
+* List payments (filtered by status)
+* Approve / reject payments
+* Grant lifetime or time-based access
+* Admin-only protected routes
+
+---
+
+## 🧭 Tech Stack
 
 ### Backend
 
@@ -53,7 +90,7 @@ This project implements **secure, cookie-based authentication**, **Google OAuth*
 * MongoDB + Mongoose
 * JWT (Access & Refresh Tokens)
 * Google OAuth 2.0
-* Nodemailer (Email)
+* Nodemailer
 * Helmet, CORS, Rate Limiting
 
 ### Frontend
@@ -66,13 +103,13 @@ This project implements **secure, cookie-based authentication**, **Google OAuth*
 
 ---
 
-## 🔐 Authentication Flow (High Level)
+## 🔐 High-Level Authentication Flow
 
 ```text
 Login / OAuth
 → Access Token (15 min) stored in httpOnly cookie
-→ Refresh Token stored securely in DB + cookie
-→ API request fails (401)
+→ Refresh Token stored in DB + cookie
+→ Access expires
 → Silent refresh (/refresh-token)
 → Retry original request
 ```
@@ -83,148 +120,70 @@ Login / OAuth
 
 ### Auth Routes
 
-| Method | Endpoint                          | Description                             |
-| ------ | --------------------------------- | --------------------------------------- |
-| POST   | `/api/auth/register`              | Register user & send verification email |
-| POST   | `/api/auth/login`                 | Login user (rate limited)               |
-| GET    | `/api/auth/google`                | Start Google OAuth                      |
-| GET    | `/api/auth/google/callback`       | Google OAuth callback                   |
-| POST   | `/api/auth/verify-email/:token`   | Verify email                            |
-| POST   | `/api/auth/forgot-password`       | Send reset password email               |
-| POST   | `/api/auth/reset-password/:token` | Reset password                          |
-| POST   | `/api/auth/refresh-token`         | Refresh access token                    |
-| POST   | `/api/auth/logout`                | Logout & revoke refresh token           |
-| GET    | `/api/auth/me`                    | Get authenticated user                  |
+| Method | Endpoint                        | Description                        |
+| ------ | ------------------------------- | ---------------------------------- |
+| POST   | /api/auth/register              | Register & send verification email |
+| POST   | /api/auth/login                 | Login (rate limited)               |
+| GET    | /api/auth/google                | Start Google OAuth                 |
+| GET    | /api/auth/google/callback       | OAuth callback                     |
+| POST   | /api/auth/verify-email/:token   | Verify email                       |
+| POST   | /api/auth/forgot-password       | Send reset email                   |
+| POST   | /api/auth/reset-password/:token | Reset password                     |
+| POST   | /api/auth/refresh-token         | Refresh access token               |
+| POST   | /api/auth/logout                | Logout & revoke refresh token      |
+| GET    | /api/auth/me                    | Get authenticated user             |
 
 ---
 
-## 🚦 Getting Started
+### Payment Routes (Backend Ready)
 
-### Prerequisites
-
-* Node.js v18+
-* MongoDB (local or Atlas)
-* Google OAuth credentials
-* SMTP credentials (Gmail / Mailtrap)
-
----
-
-### 🔧 Installation
-
-```bash
-git clone https://github.com/mohankumaronly/Authentication_using_MERN.git
-cd Authentication_using_MERN
-```
+| Method | Endpoint                                   | Description               |
+| ------ | ------------------------------------------ | ------------------------- |
+| POST   | /api/payment/intent                        | Generate UPI QR intent    |
+| POST   | /api/payment/verify                        | Submit UTR                |
+| GET    | /api/payment/admin/payments                | List all payments (admin) |
+| GET    | /api/payment/admin/payments?status=PENDING | List pending payments     |
+| POST   | /api/payment/admin/payments/:id/approve    | Approve payment           |
+| POST   | /api/payment/admin/payments/:id/reject     | Reject payment            |
 
 ---
 
-### 📦 Backend Setup
-
-```bash
-cd backend
-npm install
-```
-
-Create `.env`:
-
-```env
-PORT=8000
-MONGODB_URL=your_mongodb_connection_string
-JWT_SECRET_KEY=your_jwt_secret
-
-FRONTEND_URL=http://localhost:5173
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=http://localhost:8000/api/auth/google/callback
-
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_app_password
-```
-
-Run backend:
-
-```bash
-npm run dev
-```
-
----
-
-### 🎨 Frontend Setup
-
-```bash
-cd frontend
-npm install
-```
-
-Create `.env`:
-
-```env
-VITE_API_URL=http://localhost:8000/api
-```
-
-Run frontend:
-
-```bash
-npm run dev
-```
-
----
-
-## 📂 Project Structure
+## 📂 Project Structure (Updated)
 
 ### Backend
 
 ```text
 backend
-│   .dockerignore
-│   .env
-│   .env.example
-│   Dockerfile
-│   Dockerfile.dev
-│   nodemon.json
-│   package-lock.json
-│   package.json
-│   server.js
-│   
-├───configuration
-│       db.js
-│       
-├───middlewares
-│       rate.limiter.js
-│       token.verification.js
+│── server.js
+│── configuration/
+│   └── db.js
 │
-├───modules
-│   └───auth
-│       ├───controllers
-│       │       auth.controller.js
-│       │       auth.forgot.controller.js
-│       │       auth.me.controller.js
-│       │       auth.refreshToken.controller.js
-│       │       googleAuthCallback.controller.js
-│       │       verifyEmail.controller.js
-│       │
-│       ├───models
-│       │       auth.model.js
-│       │       auth.refreshToken.js
-│       │
-│       ├───routers
-│       ├───routers
-│       │       auth.routers.js
-│       │
-│       │
-│       └───validators
-│               auth.validate.js
-│               auth.validators.js
+├── middlewares/
+│   ├── rate.limiter.js
+│   └── token.verification.js
 │
-│               auth.validators.js
+├── modules/
+│   ├── auth/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routers/
+│   │   └── validators/
+│   │
+│   └── payment/
+│       ├── controllers/
+│       │   ├── paymentIntent.controller.js
+│       │   ├── paymentVerification.controller.js
+│       │   └── adminPayment.controller.js
+│       ├── middleware/
+│       │   ├── access.middleware.js
+│       │   └── admin.middleware.js
+│       ├── models/
+│       │   └── payment.model.js
+│       └── routers/
+│           └── payment.routes.js
 │
-│
-└───utils
-    │   sendEmail.js
-    │
-    └───emails
-            emailVerificationTemplate.js
-            resetPasswordTemplate.js
+└── utils/
+    └── Emails/
 ```
 
 ---
@@ -232,74 +191,69 @@ backend
 ### Frontend
 
 ```text
-frontend
-│   .dockerignore
-│   .env
-│   .env.example
-│   Dockerfile
-│   Dockerfile.dev
-│   nginx.conf
-│   package.json
-│   vite.config.js
+frontend/src
+│── context/
+│   └── AuthContext.jsx
 │
-└── src
-    ├── App.jsx
-    ├── main.jsx
-    ├── index.css
-    │
-    ├── common
-    │   ├── Button.jsx
-    │   └── InputText.jsx
-    │
-    ├── components
-    │   ├── Loading.jsx
-    │   ├── RedirectIfAuth.jsx
-    │   ├── RequireAuth.jsx
-    │   └── HealthCheck.jsx
-    │
-    ├── context
-    │   └── AuthContext.jsx
-    │
-    ├── Hooks
-    │   ├── InputHooks.js
-    │   └── LoadingHook.js
-    │
-    ├── layouts
-    │   └── CommonLayout.jsx
-    │
-    ├── pages
-    │   ├── Auth
-    │   │   ├── Login.jsx
-    │   │   ├── RegisterPage.jsx
-    │   │   ├── ForgotPasswordPage.jsx
-    │   │   ├── ResetPasswordPage.jsx
-    │   │   ├── VerificationPage.jsx
-    │   │   ├── VerificationHandler.jsx
-    │   │   └── VerificationLinkPage.jsx
-    │   │
-    │   ├── Home
-    │   │   └── HomePage.jsx
-    │   │
-    │   └── NotFound
-    │       └── NotFoundPage.jsx
-    │
-    ├── Routers
-    │   └── AppRouters.jsx
-    │
-    └── services
-        ├── api.js
-        └── auth.service.js
+├── components/
+│   ├── RequireAuth.jsx
+│   ├── RedirectIfAuth.jsx
+│   └── Loading.jsx
+│
+├── pages/
+│   ├── Auth/
+│   ├── Home/
+│   └── NotFound/
+│
+├── services/
+│   ├── api.js
+│   └── auth.service.js
+│
+└── Routers/
+    └── AppRouters.jsx
 ```
+
+---
+
+## 🚧 Roadmap (Planned Enhancements)
+
+### 1️⃣ Pagination for Admin Payments
+
+```
+/admin/payments?page=1&limit=10
+```
+
+### 2️⃣ Reject Reason Support
+
+* Admin can provide reason
+* User can view rejection message
+
+### 3️⃣ Admin Payment UI
+
+* Table view
+* Approve / Reject buttons
+* Status filters
+
+### 4️⃣ Time-Based Access Auto Expiry
+
+* Middleware / cron job
+* Disable access after `endDate`
+
+### 5️⃣ Cleanup & Hardening
+
+* DB indexes (`status`, `userId`)
+* Validation tightening
+* RBAC upgrade path
 
 ---
 
 ## 🏁 Production Notes
 
-* Uses **httpOnly cookies** (no localStorage)
-* Supports **silent token refresh**
-* Secure OAuth state validation
+* Auth system fully integrated with frontend
+* Payment backend is stable & secure
+* Frontend payment integration is in progress
+* Manual approval avoids unsafe automation
 * Ready for Docker & cloud deployment
-* Clean separation of concerns (controllers, services, context)
 
 ---
 
