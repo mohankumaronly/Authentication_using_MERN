@@ -27,3 +27,15 @@ export const forgotPassword = (data) => {
 export const resetPassword = (token, data) => {
   return api.post(`/auth/reset-password/${token}`, data);
 }
+
+export const createPayment = (data) => {
+  return api.post('/payment/intent', data)
+}
+
+export const submitPayment = (data) => {
+  return api.post("/payment/verify", data);
+};
+
+export const getAllPayments = () => {
+  return api.get('payment/admin/payments')
+}

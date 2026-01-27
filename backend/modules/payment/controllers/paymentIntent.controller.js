@@ -16,7 +16,7 @@ exports.createPaymentIntent = async (req, res) => {
     let note;
 
     if (paymentType === "ONE_TIME") {
-      amount = 1;
+      amount = 5;
       note = "ONE_TIME_ACCESS";
     }
 
@@ -26,9 +26,9 @@ exports.createPaymentIntent = async (req, res) => {
       }
 
       const planAmountMap = {
-        MONTHLY: 199,
-        SIX_MONTH: 999,
-        YEARLY: 1799,
+        MONTHLY: 1,
+        SIX_MONTH: 2,
+        YEARLY: 30,
       };
 
       amount = planAmountMap[plan];

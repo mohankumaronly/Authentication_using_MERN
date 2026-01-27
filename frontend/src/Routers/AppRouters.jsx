@@ -12,6 +12,10 @@ import VerificationLinkPage from "../pages/Auth/VerificationLinkPage";
 import RequireAuth from "../components/RequireAuth";
 import RedirectIfAuth from "../components/RedirectIfAuth";
 import NotFoundPage from "../pages/NotFound/NotFoundPage";
+import PaymentPage from "../pages/payment/PaymentPage";
+import PaymentSuccessPage from "../pages/payment/PaymentSuccessPage";
+import AdminPaymentsPage from "../pages/Admin/AdminPaymentsPage";
+import RequireAdmin from "../components/RequireAdmin";
 
 const AppRouters = () => {
     return (
@@ -47,6 +51,30 @@ const AppRouters = () => {
                     <RequireAuth>
                         <HomePage />
                     </RequireAuth>
+                }
+            />
+            <Route
+                path="/payment/pay"
+                element={
+                    <RequireAuth>
+                        <PaymentPage />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/payment/success"
+                element={
+                    <RequireAuth>
+                        <PaymentSuccessPage />
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/admin/payments"
+                element={
+                    <RequireAdmin>
+                        <AdminPaymentsPage />
+                    </RequireAdmin>
                 }
             />
             <Route path="*" element={<NotFoundPage />} />
