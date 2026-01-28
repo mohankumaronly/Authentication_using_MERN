@@ -36,6 +36,19 @@ export const submitPayment = (data) => {
   return api.post("/payment/verify", data);
 };
 
-export const getAllPayments = () => {
-  return api.get('payment/admin/payments')
-}
+// export const getAllPayments = () => {
+//   return api.get('payment/admin/payments')
+// }
+export const approvePayment = (paymentId) => {
+  return api.post(`/payment/admin/payments/${paymentId}/approve`);
+};
+
+export const rejectPayment = (paymentId) => {
+  return api.post(`/payment/admin/payments/${paymentId}/reject`);
+};
+
+export const getAllPayments = (status) => {
+  const query = status ? `?status=${status}` : "";
+  return api.get(`/payment/admin/payments${query}`);
+};
+

@@ -29,7 +29,9 @@ exports.approvePayment = async (req, res) => {
         endDate: null,
         isActive: true,
       };
-    } else if (payment.paymentType === "TIME_BASED") {
+    }
+
+    if (payment.paymentType === "TIME_BASED") {
       const planDaysMap = {
         MONTHLY: 30,
         SIX_MONTH: 180,
@@ -41,22 +43,28 @@ exports.approvePayment = async (req, res) => {
         return res.status(400).json({ message: "Invalid plan" });
       }
 
-      const endDate = new Date(now);
+      const baseDate =
+        user.access?.isActive &&
+        user.access.type === "TIME_BASED" &&
+        user.access.endDate &&
+        new Date(user.access.endDate) > now
+          ? new Date(user.access.endDate)
+          : now;
+
+      const endDate = new Date(baseDate);
       endDate.setDate(endDate.getDate() + days);
 
       user.access = {
         type: "TIME_BASED",
-        startDate: now,
+        startDate: baseDate,
         endDate,
         isActive: true,
       };
-    } else {
-      return res.status(400).json({ message: "Invalid payment type" });
     }
 
     user.lastPaymentAt = now;
     await user.save();
-
+    
     payment.status = "VERIFIED";
     payment.verifiedAt = now;
     payment.verifiedBy = adminId;
@@ -64,6 +72,7 @@ exports.approvePayment = async (req, res) => {
 
     return res.status(200).json({
       message: "Payment approved and access granted",
+      access: user.access,
     });
   } catch (error) {
     console.error("approvePayment error:", error);
