@@ -1,0 +1,494 @@
+{
+  "info": {
+    "_postman_id": "9f53eb36-c453-417f-9726-a1041e5105bf",
+    "name": "sample_code",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47170219",
+    "_collection_link": "https://go.postman.co/collection/47170219-9f53eb36-c453-417f-9726-a1041e5105bf?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\": \"\",\r\n    \"lastName\": \"\",\r\n    \"email\": \"\",\r\n    \"password\": \"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/auth/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Email-verification",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/auth/verify-email/b43792ca8aa8c7bca66b8b9b7763efb4d5b50690649bc9f17e0e470a08aa883f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "verify-email",
+            "b43792ca8aa8c7bca66b8b9b7763efb4d5b50690649bc9f17e0e470a08aa883f"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "me",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/auth/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/auth/logout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "forgot-password",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/auth/forgot-password",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "forgot-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "reset-password",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"password\": \"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/auth/reset-password/f4eb09d4f3714abd25dacb73cf490079936c7486cdddf3bd8d55aceb96e07ba8",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "reset-password",
+            "f4eb09d4f3714abd25dacb73cf490079936c7486cdddf3bd8d55aceb96e07ba8"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "one-time-Qr-generating-payment-link",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"paymentType\": \"ONE_TIME\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/payment/intent",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "intent"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "monthly-time-Qr-generating-payment-link",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"paymentType\": \"TIME_BASED\",\r\n    \"plan\": \"MONTHLY\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/payment/intent",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "intent"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "six-month-time-Qr-generating-payment-link",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"paymentType\": \"TIME_BASED\",\r\n    \"plan\": \"SIX_MONTH\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/payment/intent",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "intent"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "one-year-time-Qr-generating-payment-link",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"paymentType\": \"TIME_BASED\",\r\n    \"plan\": \"YEARLY\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/payment/intent",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "intent"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "payment-verify",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"utr\": \"\",\r\n  \"paymentType\": \"ONE_TIME\",\r\n  \"amount\": 199\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/payment/verify",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "verify"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin-approval",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"utr\": \"PASTE_THE_REAL_UTR_FROM_PHONEPE\",\r\n  \"paymentType\": \"ONE_TIME\",\r\n  \"amount\": 199\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/payment/admin/payments/6978b6abba19b9f374ea3e99/approve",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "admin",
+            "payments",
+            "6978b6abba19b9f374ea3e99",
+            "approve"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get-allpayments",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"rockrangerz801@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"rememberMe\": true\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/auth/payment/admin/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "payment",
+            "admin",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "verified-payment",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/payment/admin/payments?status=VERIFIED",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "admin",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "VERIFIED"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "pending-payment",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/payment/admin/payments?status=REJECTED",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "admin",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "REJECTED"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get-allpayments",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"rockrangerz801@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"rememberMe\": true\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/payment/admin/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "payment",
+            "admin",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
