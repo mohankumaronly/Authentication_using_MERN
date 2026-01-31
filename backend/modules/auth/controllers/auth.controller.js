@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const User = require("../models/auth.model");
 const RefreshToken = require("../models/auth.refreshToken");
 const sendEmail = require("../../../utils/sendEmail");
-const verifyEmailTemplate = require("../../../utils/emails/emailVerificationTemplate");
+const verifyEmailTemplate = require("../../../utils/Emails/emailVerificationTemplate");
 
 const cookieOptions = {
     httpOnly: true,
